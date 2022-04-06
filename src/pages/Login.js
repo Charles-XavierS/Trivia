@@ -1,4 +1,7 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import loginAction from '../redux/actions/userActions';
 
 class Login extends Component {
   constructor() {
@@ -11,6 +14,12 @@ class Login extends Component {
       setName: false,
       setEmail: false,
     };
+  }
+
+  handleClick = () => {
+    const { email, name } = this.state;
+    const { login } = this.props;
+    login(email, name);
   }
 
   validadeName = () => {
@@ -85,10 +94,10 @@ class Login extends Component {
           <button
             data-testid="btn-play"
             type="button"
-            // onClick={ () => {} }
+            onClick={ this.handleClick }
             disabled={ SaveButtonDisabled }
           >
-            Jogar
+            Play
           </button>
         </form>
       </div>
@@ -96,4 +105,12 @@ class Login extends Component {
   }
 }
 
-export default Login;
+const mapDispatchToProps = (dispatch) => ({
+  login: (email, name) => dispatch(loginAction(email, name)),
+});
+
+Login.propTypes = {
+  login: PropTypes.func.isRequired,
+};
+
+export default connect(null, mapDispatchToProps)(Login);
