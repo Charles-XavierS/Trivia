@@ -1,3 +1,4 @@
+import md5 from 'crypto-js/md5';
 import './types';
 
 const API_BASE = 'https://opentdb.com/api.php?';
@@ -14,7 +15,6 @@ async function getQuestions({ token, category, difficulty, amount, type }) {
   const DEFAULT_AMOUNT = 5;
 
   const params = new URLSearchParams();
-
   params.set('amount', amount || DEFAULT_AMOUNT);
   if (token) params.set('token', token);
   if (category) params.set('category', category);
@@ -51,4 +51,12 @@ async function getCategories() {
   return data.trivia_categories;
 }
 
-export { getCategories, getQuestions, getToken };
+/**
+ * Retorna o link da imagem do Gravatar.
+ */
+function getGravatar(email) {
+  const hash = md5(email);
+  return `https://www.gravatar.com/avatar/${hash}`;
+}
+
+export { getCategories, getQuestions, getToken, getGravatar };
