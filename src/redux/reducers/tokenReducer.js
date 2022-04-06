@@ -1,4 +1,4 @@
-const initialState = undefined;
+const initialState = null;
 
 const tokenReducer = (state = initialState, action) => {
   switch (action.type) {
