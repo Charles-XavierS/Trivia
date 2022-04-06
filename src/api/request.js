@@ -56,7 +56,7 @@ async function getCategories() {
  */
 function getGravatar(email) {
   const hash = md5(email);
-  return `https://www.gravatar.com/avatar/${hash}`;
+  return hash.toString();
 }
 
 export { getCategories, getQuestions, getToken, getGravatar };

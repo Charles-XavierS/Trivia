@@ -1,4 +1,8 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { Redirect } from 'react-router-dom';
+import loginAction from '../redux/actions/userActions';
 
 class Login extends Component {
   constructor() {
@@ -11,6 +15,12 @@ class Login extends Component {
       setName: false,
       setEmail: false,
     };
+  }
+
+  handleClick = () => {
+    const { email, name } = this.state;
+    const { login } = this.props;
+    login(email, name);
   }
 
   validadeName = () => {
@@ -35,8 +45,6 @@ class Login extends Component {
         setEmail: true,
       }, this.validadeButton);
     }
-    const { setEmail } = this.state;
-    console.log(setEmail);
   }
 
   validadeButton = () => {
@@ -53,8 +61,6 @@ class Login extends Component {
     this.setState({
       name: target.value,
     }, this.validadeName);
-    const { name } = this.state;
-    console.log(name);
   }
 
   handleChangeEmail = ({ target }) => {
@@ -65,6 +71,9 @@ class Login extends Component {
 
   render() {
     const { SaveButtonDisabled, name, email } = this.state;
+    const { history, questions } = this.props;
+
+    if (questions.length) return <Redirect push to="/game" />;
     return (
       <div>
         <form>
@@ -85,10 +94,17 @@ class Login extends Component {
           <button
             data-testid="btn-play"
             type="button"
-            // onClick={ () => {} }
+            onClick={ this.handleClick }
             disabled={ SaveButtonDisabled }
           >
-            Jogar
+            Play
+          </button>
+          <button
+            data-testid="btn-settings"
+            type="button"
+            onClick={ () => history.push('/settings') }
+          >
+            Configurações
           </button>
         </form>
       </div>
@@ -96,4 +112,20 @@ class Login extends Component {
   }
 }
 
-export default Login;
+const mapStateToProps = (state) => ({
+  questions: state.player.questions,
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  login: (email, name) => dispatch(loginAction(email, name)),
+});
+
+Login.propTypes = {
+  login: PropTypes.func.isRequired,
+  questions: PropTypes.arrayOf(PropTypes.any).isRequired,
+  history: PropTypes.shape({
+    push: PropTypes.func,
+  }).isRequired,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Login);
