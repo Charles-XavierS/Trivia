@@ -8,13 +8,13 @@ class Feedback extends Component {
     const { assertions } = this.props;
     let scorePhrase;
     const number = 3;
-    if (assertions < number && assertions === '0') {
+
+    if (assertions < number && assertions === 0) {
       scorePhrase = 'Could be better...';
     } if (assertions > number) {
       scorePhrase = 'Well Done!';
-    } if (assertions === '') {
-      scorePhrase = '';
     }
+
     return scorePhrase;
   }
 
