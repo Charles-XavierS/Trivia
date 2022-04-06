@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import Header from '../components/Header';
 
 class Feedback extends Component {
   handleScore() {
@@ -18,14 +19,9 @@ class Feedback extends Component {
   }
 
   feedback() {
-    const { gravatarEmail, name, score } = this.props;
     return (
       <main>
-        <header>
-          <img data-testid="header-profile-picture" src={ `https://www.gravatar.com/avatar/${gravatarEmail}` } alt="Avatar" />
-          <p data-testid="header-player-name">{name}</p>
-          <p data-testid="header-score">{score}</p>
-        </header>
+        <Header />
         <h4 data-testid="feedback-text">{this.handleScore()}</h4>
       </main>
     );
@@ -41,16 +37,10 @@ class Feedback extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  gravatarEmail: state.player.gravatarEmail,
-  name: state.player.name,
-  score: state.player.score,
   assertions: state.player.assertions,
 });
 
 Feedback.propTypes = {
-  gravatarEmail: PropTypes.string.isRequired,
-  name: PropTypes.string.isRequired,
-  score: PropTypes.number.isRequired,
   assertions: PropTypes.string.isRequired,
 };
 
