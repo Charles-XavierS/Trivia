@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import { correctAnswerAction } from '../redux/actions/userActions';
 
 const ONE_SECOND = 1000;
 class Question extends Component {
@@ -12,7 +13,7 @@ class Question extends Component {
     this.state = {
       answers: this.shuffleAnswers(),
       wasClicked: false,
-      timer: 30,
+      timer: 5,
     };
   }
 
@@ -29,7 +30,7 @@ class Question extends Component {
     this.setState((prev) => {
       if (prev.timer === 0) {
         this.stopTimer();
-        this.handleAnswer();
+        this.handleAnswer({});
         return prev;
       }
 
@@ -69,18 +70,30 @@ class Question extends Component {
     return result;
   }
 
-  handleAnswer = () => {
+  handleAnswer = ({ target }) => {
+    const { correctAnswer, question } = this.props;
+    const { timer } = this.state;
     this.setState({ wasClicked: true });
+    this.stopTimer();
+
+    const answer = target?.dataset.testid;
+    console.log(answer);
+
+    if (answer === 'correct-answer') {
+      correctAnswer(question.difficulty, timer);
+    }
   }
 
   handleNext = () => {
     const { nextQuestion } = this.props;
-    this.setState({ wasClicked: false });
+
+    this.setState({ wasClicked: false, timer: 30 });
+    this.startTimer();
     nextQuestion();
   }
 
   render() {
-    const { question, nextQuestion } = this.props;
+    const { question } = this.props;
     const { answers, wasClicked, timer } = this.state;
 
     return (
@@ -94,7 +107,14 @@ class Question extends Component {
         <p data-testid="question-category">{ question.category }</p>
         <p data-testid="question-text">{ question.question }</p>
 
-        <div data-testid="answer-options" className={ wasClicked ? 'answer_container' : undefined }>
+        <div
+          data-testid="answer-options"
+          className={
+            wasClicked
+              ? 'answer_container'
+              : undefined
+          }
+        >
           { answers.map((answer) => (
             <button
               type="button"
@@ -125,11 +145,14 @@ class Question extends Component {
   }
 }
 
-const mapDispatchToProps = () => ({});
+const mapDispatchToProps = (dispatch) => ({
+  correctAnswer: (difficulty, timer) => dispatch(correctAnswerAction(difficulty, timer)),
+});
 
 Question.propTypes = {
-  question: PropTypes.shape(PropTypes.any).isRequired,
+  question: PropTypes.shape(PropTypes.any),
   nextQuestion: PropTypes.func.isRequired,
-};
+  correctAnswer: PropTypes.func.isRequired,
+}.isRequired;
 
 export default connect(null, mapDispatchToProps)(Question);

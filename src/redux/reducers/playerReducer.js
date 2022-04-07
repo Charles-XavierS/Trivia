@@ -12,6 +12,12 @@ const playerReducer = (state = initialState, action) => {
     return { ...state, ...action.payload };
   case 'SET_QUESTIONS':
     return { ...state, questions: action.questions };
+  case 'CORRECT_ANSWER':
+    return {
+      ...state,
+      assertions: state.assertions + 1,
+      score: state.score + action.score,
+    };
   default:
     return state;
   }

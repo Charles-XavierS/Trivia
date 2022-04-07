@@ -9,9 +9,9 @@ class Feedback extends Component {
     let scorePhrase;
     const number = 3;
 
-    if (assertions < number && assertions === 0) {
+    if (assertions < number) {
       scorePhrase = 'Could be better...';
-    } if (assertions > number) {
+    } else if (assertions >= number) {
       scorePhrase = 'Well Done!';
     }
 
