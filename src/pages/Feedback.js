@@ -39,7 +39,7 @@ class Feedback extends Component {
   }
 
   feedback() {
-    const { player } = this.props;
+    const { player, history } = this.props;
     const { score, assertions } = player;
 
     if (player.name.length === 0) return <Redirect push to="/" />;
@@ -63,6 +63,13 @@ class Feedback extends Component {
           data-testid="btn-play-again"
         >
           Play Again
+        </button>
+        <button 
+          type="button"
+          data-testid="btn-ranking"
+          onClick={ () => history.push('/ranking') }
+        >
+          Ranking
         </button>
       </main>
     );
