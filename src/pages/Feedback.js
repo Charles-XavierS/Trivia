@@ -1,11 +1,31 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import { Redirect } from 'react-router-dom';
 import Header from '../components/Header';
+import addEntryAction from '../redux/actions/rankingActions';
+import { resetUserAction } from '../redux/actions/userActions';
 
 class Feedback extends Component {
+  componentDidMount() {
+    const { addEntry, player } = this.props;
+
+    const payload = {
+      name: player.name,
+      score: player.score,
+      picture: `https://www.gravatar.com/avatar/${player.gravatarEmail}`,
+    };
+
+    addEntry(payload);
+  }
+
+  playAgain = () => {
+    const { resetUser } = this.props;
+    resetUser();
+  }
+
   handleScore() {
-    const { assertions } = this.props;
+    const { player: { assertions } } = this.props;
     let scorePhrase;
     const number = 3;
 
@@ -19,8 +39,10 @@ class Feedback extends Component {
   }
 
   feedback() {
-    const { score, assertions } = this.props;
+    const { player } = this.props;
+    const { score, assertions } = player;
 
+    if (player.name.length === 0) return <Redirect push to="/" />;
     return (
       <main>
         <Header />
@@ -35,6 +57,13 @@ class Feedback extends Component {
           <span data-testid="feedback-total-question">{ assertions }</span>
         </span>
         <h4 data-testid="feedback-text">{this.handleScore()}</h4>
+        <button
+          type="button"
+          onClick={ this.playAgain }
+          data-testid="btn-play-again"
+        >
+          Play Again
+        </button>
       </main>
     );
   }
@@ -48,14 +77,20 @@ class Feedback extends Component {
   }
 }
 
+const mapDispatchToProps = (dispatch) => ({
+  addEntry: (info) => dispatch(addEntryAction(info)),
+  resetUser: () => dispatch(resetUserAction()),
+});
+
 const mapStateToProps = (state) => ({
-  assertions: state.player.assertions,
-  score: state.player.score,
+  player: state.player,
 });
 
 Feedback.propTypes = {
-  assertions: PropTypes.string.isRequired,
-  score: PropTypes.number.isRequired,
-};
+  player: PropTypes.shape(PropTypes.any),
+  addEntry: PropTypes.func,
+  resetUser: PropTypes.func,
+  history: PropTypes.shape(PropTypes.any),
+}.isRequired;
 
-export default connect(mapStateToProps, null)(Feedback);
+export default connect(mapStateToProps, mapDispatchToProps)(Feedback);

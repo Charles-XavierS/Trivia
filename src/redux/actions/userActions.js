@@ -21,4 +21,8 @@ const correctAnswerAction = (difficulty, time) => (dispatch) => {
   });
 };
 
-export { loginAction, correctAnswerAction };
+const resetUserAction = () => (dispatch) => {
+  dispatch({ type: 'RESET', reset: true });
+};
+
+export { loginAction, correctAnswerAction, resetUserAction };

@@ -18,6 +18,9 @@ const playerReducer = (state = initialState, action) => {
       assertions: state.assertions + 1,
       score: state.score + action.score,
     };
+  case 'RESET':
+    console.log(action);
+    return initialState;
   default:
     return state;
   }
