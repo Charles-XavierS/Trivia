@@ -2,15 +2,42 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
+const ONE_SECOND = 1000;
 class Question extends Component {
   constructor(props) {
     super(props);
 
+    this.timer = setInterval(this.reduceTimer, ONE_SECOND);
+
     this.state = {
       answers: this.shuffleAnswers(),
       wasClicked: false,
+      timer: 30,
     };
   }
+
+  startTimer = () => {
+    this.timer = setInterval(this.reduceTimer, ONE_SECOND);
+  }
+
+  stopTimer = () => {
+    clearInterval(this.timer);
+    this.timer = null;
+  }
+
+  reduceTimer = () => {
+    this.setState((prev) => {
+      if (prev.timer === 0) {
+        this.stopTimer();
+        this.handleAnswer();
+        return prev;
+      }
+
+      return {
+        timer: prev.timer - 1,
+      };
+    });
+  };
 
   shuffleAnswers = () => {
     const { question } = this.props;
@@ -42,25 +69,38 @@ class Question extends Component {
     return result;
   }
 
-  handleAnswer = ({ target }) => {
+  handleAnswer = () => {
     this.setState({ wasClicked: true });
   }
 
+  handleNext = () => {
+    const { nextQuestion } = this.props;
+    this.setState({ wasClicked: false });
+    nextQuestion();
+  }
+
   render() {
-    const { question } = this.props;
-    const { answers, wasClicked } = this.state;
+    const { question, nextQuestion } = this.props;
+    const { answers, wasClicked, timer } = this.state;
 
     return (
       <div>
+        <p>
+          Timer:
+          {' '}
+          { timer }
+        </p>
+
         <p data-testid="question-category">{ question.category }</p>
         <p data-testid="question-text">{ question.question }</p>
 
-        <div data-testid="answer-options" className={ wasClicked && 'answer_container' }>
+        <div data-testid="answer-options" className={ wasClicked ? 'answer_container' : undefined }>
           { answers.map((answer) => (
             <button
               type="button"
               className={ answer.correct ? 'correct' : 'wrong' }
               key={ answer.value }
+              disabled={ wasClicked }
               data-testid={ answer.correct
                 ? 'correct-answer'
                 : `wrong-answer-${answer.index}` }
@@ -71,6 +111,15 @@ class Question extends Component {
           ))}
         </div>
 
+        { wasClicked && (
+          <button
+            type="button"
+            onClick={ this.handleNext }
+            data-testid="btn-next"
+          >
+            Next
+          </button>
+        ) }
       </div>
     );
   }
@@ -80,6 +129,7 @@ const mapDispatchToProps = () => ({});
 
 Question.propTypes = {
   question: PropTypes.shape(PropTypes.any).isRequired,
+  nextQuestion: PropTypes.func.isRequired,
 };
 
 export default connect(null, mapDispatchToProps)(Question);

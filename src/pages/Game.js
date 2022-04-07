@@ -26,7 +26,7 @@ class Game extends Component {
     return (
       <>
         <Header />
-        <Question question={ questions[index] } />
+        <Question nextQuestion={ this.nextQuestion } question={ questions[index] } />
       </>
     );
   }
