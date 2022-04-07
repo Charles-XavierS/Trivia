@@ -7,12 +7,12 @@
   pointer-events: none;
 }
 
-.red-border {
-  border: 1px solid red;
+.answer_container .wrong {
+  border: 3px solid rgb(255, 0, 0);
 }
 
-.green-border {
-  border: 1px solid green;
+.answer_container .correct {
+  border: 3px solid rgb(6, 240, 15);
 }
 
 @media ( prefers-reduced-motion : no-preference ) {

@@ -8,6 +8,7 @@ class Question extends Component {
 
     this.state = {
       answers: this.shuffleAnswers(),
+      wasClicked: false,
     };
   }
 
@@ -41,23 +42,29 @@ class Question extends Component {
     return result;
   }
 
+  handleAnswer = ({ target }) => {
+    this.setState({ wasClicked: true });
+  }
+
   render() {
     const { question } = this.props;
-    const { answers } = this.state;
+    const { answers, wasClicked } = this.state;
 
     return (
       <div>
         <p data-testid="question-category">{ question.category }</p>
         <p data-testid="question-text">{ question.question }</p>
 
-        <div data-testid="answer-options">
+        <div data-testid="answer-options" className={ wasClicked && 'answer_container' }>
           { answers.map((answer) => (
             <button
               type="button"
+              className={ answer.correct ? 'correct' : 'wrong' }
               key={ answer.value }
               data-testid={ answer.correct
                 ? 'correct-answer'
                 : `wrong-answer-${answer.index}` }
+              onClick={ this.handleAnswer }
             >
               { answer.value }
             </button>
