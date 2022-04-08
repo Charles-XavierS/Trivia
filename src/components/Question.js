@@ -13,7 +13,7 @@ class Question extends Component {
     this.state = {
       answers: this.shuffleAnswers(),
       wasClicked: false,
-      timer: 5,
+      timer: 30,
     };
   }
 
