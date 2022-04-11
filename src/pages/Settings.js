@@ -48,10 +48,17 @@ class Settings extends Component {
           value={ category || '' }
           onChange={ this.handleInput }
         >
-          <option value="">Any Category</option>
-          { categories.map((item) => (
-            <option key={ item.id } value={ item.id }>{ item.name }</option>
-          ))}
+          { categories.length
+            ? (
+              <>
+                <option value="">Any Category</option>
+                { categories.map((item) => (
+                  <option key={ item.id } value={ item.id }>{ item.name }</option>
+                ))}
+              </>
+            ) : (
+              <option value={ category || '' } disabled>Loading...</option>
+            )}
         </select>
 
         <select
