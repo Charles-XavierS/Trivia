@@ -43,7 +43,7 @@ async function getToken() {
 /**
  * Retorna uma lista de categorias
  *
- * @returns {Promise<Category>} Lista de categorias
+ * @returns {Promise<Category[]>} Lista de categorias
  */
 async function getCategories() {
   const request = await fetch(CATEGORY_BASE);
