@@ -23,12 +23,13 @@ class Game extends Component {
   render() {
     const { index } = this.state;
     const { questions } = this.props;
-    const REDIRECT_INDEX = 5;
 
+    const REDIRECT_INDEX = questions.length;
     if (index === REDIRECT_INDEX) return <Redirect push to="/feedback" />;
     return (
       <>
         <Header />
+        <h2>{ `Question ${index + 1} of ${questions.length}`}</h2>
         <Question nextQuestion={ this.nextQuestion } question={ questions[index] } />
       </>
     );

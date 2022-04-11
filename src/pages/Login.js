@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Redirect } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 import { loginAction } from '../redux/actions/userActions';
 
 class Login extends Component {
@@ -11,103 +11,72 @@ class Login extends Component {
     this.state = {
       email: '',
       name: '',
-      SaveButtonDisabled: true,
-      setName: false,
-      setEmail: false,
     };
   }
 
-  handleClick = () => {
+  handleInput = ({ target }) => {
+    const { name, value } = target;
+
+    this.setState(() => ({
+      [name]: value,
+    }));
+  }
+
+  handleLogin = () => {
     const { email, name } = this.state;
     const { login } = this.props;
     login(email, name);
   }
 
-  validadeName = () => {
-    const { name } = this.state;
+  isFormValid = () => {
+    const { name, email } = this.state;
+    const emailRegex = /\S+@\S+\.\S+/;
 
-    if (name.length > 0) {
-      this.setState({
-        setName: true,
-      }, this.validadeButton);
-    }
-    // const { setName } = this.state;
-    // console.log(setName);
-  }
+    if (name.length < 1) return false;
+    if (!emailRegex.test(email)) return false;
 
-  validadeEmail = () => {
-    const { email } = this.state;
-    console.log(email);
-    const regexEmailTest = /\S+@\S+\.\S+/;
-    const isValidEmail = regexEmailTest.test(email);
-    if (isValidEmail) {
-      this.setState({
-        setEmail: true,
-      }, this.validadeButton);
-    }
-  }
-
-  validadeButton = () => {
-    const { setName, setEmail } = this.state;
-
-    if ((setName && setEmail) === true) {
-      this.setState({
-        SaveButtonDisabled: false,
-      });
-    }
-  }
-
-  handleChangeName = ({ target }) => {
-    this.setState({
-      name: target.value,
-    }, this.validadeName);
-  }
-
-  handleChangeEmail = ({ target }) => {
-    this.setState({
-      email: target.value,
-    }, this.validadeEmail);
+    return true;
   }
 
   render() {
-    const { SaveButtonDisabled, name, email } = this.state;
-    const { history, questions } = this.props;
+    const { handleLogin, handleInput, isFormValid } = this;
+    const { name, email } = this.state;
+    const { questions } = this.props;
 
     if (questions.length) return <Redirect push to="/game" />;
     return (
-      <div>
-        <form>
-          <input
-            data-testid="input-player-name"
-            type="text"
-            value={ name }
-            onChange={ this.handleChangeName }
-            placeholder="Nome do Jogador"
-          />
-          <input
-            data-testid="input-gravatar-email"
-            type="email"
-            value={ email }
-            onChange={ this.handleChangeEmail }
-            placeholder="Email"
-          />
-          <button
-            data-testid="btn-play"
-            type="button"
-            onClick={ this.handleClick }
-            disabled={ SaveButtonDisabled }
-          >
-            Play
-          </button>
+      <form>
+        <input
+          data-testid="input-player-name"
+          name="name"
+          value={ name }
+          onChange={ handleInput }
+          placeholder="Nome do Jogador"
+        />
+        <input
+          data-testid="input-gravatar-email"
+          name="email"
+          value={ email }
+          onChange={ handleInput }
+          placeholder="Email"
+        />
+        <button
+          data-testid="btn-play"
+          type="button"
+          onClick={ handleLogin }
+          disabled={ !isFormValid() }
+        >
+          Play
+        </button>
+        <Link to="/settings">
           <button
             data-testid="btn-settings"
             type="button"
-            onClick={ () => history.push('/settings') }
           >
-            Configurações
+            Settings
           </button>
-        </form>
-      </div>
+        </Link>
+      </form>
     );
   }
 }
@@ -121,11 +90,9 @@ const mapDispatchToProps = (dispatch) => ({
 });
 
 Login.propTypes = {
-  login: PropTypes.func.isRequired,
-  questions: PropTypes.arrayOf(PropTypes.any).isRequired,
-  history: PropTypes.shape({
-    push: PropTypes.func,
-  }).isRequired,
-};
+  login: PropTypes.func,
+  questions: PropTypes.arrayOf(PropTypes.any),
+  history: PropTypes.shape({ push: PropTypes.func }),
+}.isRequired;
 
 export default connect(mapStateToProps, mapDispatchToProps)(Login);

@@ -4,41 +4,59 @@ import PropTypes from 'prop-types';
 import { correctAnswerAction } from '../redux/actions/userActions';
 
 const ONE_SECOND = 1000;
+
 class Question extends Component {
   constructor(props) {
     super(props);
 
-    this.timer = setInterval(this.reduceTimer, ONE_SECOND);
+    this.interval = setInterval(this.decrementTimer, ONE_SECOND);
 
     this.state = {
-      answers: this.shuffleAnswers(),
+      answers: [],
       wasClicked: false,
       timer: 30,
     };
   }
 
+  componentDidMount() {
+    this.shuffleAnswers();
+  }
+
+  componentDidUpdate(prev) {
+    const { question } = this.props;
+
+    if (question.question !== prev.question.question) {
+      this.shuffleAnswers();
+    }
+  }
+
   startTimer = () => {
-    this.timer = setInterval(this.reduceTimer, ONE_SECOND);
+    this.interval = setInterval(this.decrementTimer, ONE_SECOND);
   }
 
   stopTimer = () => {
-    clearInterval(this.timer);
-    this.timer = null;
+    clearInterval(this.interval);
+    this.interval = null;
   }
 
-  reduceTimer = () => {
-    this.setState((prev) => {
-      if (prev.timer === 0) {
-        this.stopTimer();
-        this.handleAnswer({});
-        return prev;
-      }
+  decrementTimer = () => {
+    this.setState((prev) => ({
+      timer: prev.timer - 1,
+    }), this.checkTimer);
+  }
 
-      return {
-        timer: prev.timer - 1,
-      };
-    });
-  };
+  restartTimer = () => {
+    this.setState({ timer: 30 });
+    this.startTimer();
+  }
+
+  checkTimer = () => {
+    const { timer } = this.state;
+    if (timer > 0) return;
+
+    this.stopTimer();
+    this.handleAnswer({});
+  }
 
   shuffleAnswers = () => {
     const { question } = this.props;
@@ -67,7 +85,7 @@ class Question extends Component {
       }
     }
 
-    return result;
+    this.setState({ answers: result });
   }
 
   handleAnswer = ({ target }) => {
@@ -151,8 +169,8 @@ const mapDispatchToProps = (dispatch) => ({
 
 Question.propTypes = {
   question: PropTypes.shape(PropTypes.any),
-  nextQuestion: PropTypes.func.isRequired,
-  correctAnswer: PropTypes.func.isRequired,
+  nextQuestion: PropTypes.func,
+  correctAnswer: PropTypes.func,
 }.isRequired;
 
 export default connect(null, mapDispatchToProps)(Question);
