@@ -2,6 +2,7 @@ const initialState = {
   category: localStorage.getItem('settings_category'),
   difficulty: localStorage.getItem('settings_difficulty'),
   type: localStorage.getItem('settings_type'),
+  amount: localStorage.getItem('settings_amount') || '5',
 };
 
 const settingsReducer = (state = initialState, action) => {

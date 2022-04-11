@@ -36,12 +36,21 @@ class Settings extends Component {
   }
 
   render() {
-    const { settings: { type, difficulty, category } } = this.props;
+    const { settings: { type, difficulty, category, amount } } = this.props;
     const { categories } = this.state;
 
     return (
       <div data-testid="settings-title">
         <h1>Settings</h1>
+
+        <input
+          type="number"
+          min="1"
+          max="50"
+          name="amount"
+          onChange={ this.handleInput }
+          value={ amount }
+        />
 
         <select
           name="category"
