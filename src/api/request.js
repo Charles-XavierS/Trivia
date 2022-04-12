@@ -1,4 +1,5 @@
 import md5 from 'crypto-js/md5';
+import cleanup from './helper';
 import './types';
 
 const API_BASE = 'https://opentdb.com/api.php?';
@@ -16,6 +17,7 @@ async function getQuestions({ token, category, difficulty, amount, type }) {
 
   const params = new URLSearchParams();
   params.set('amount', amount || DEFAULT_AMOUNT);
+  params.set('encode', 'url3986');
   if (token) params.set('token', token);
   if (category) params.set('category', category);
   if (difficulty) params.set('difficulty', difficulty);
@@ -23,7 +25,7 @@ async function getQuestions({ token, category, difficulty, amount, type }) {
 
   const request = await fetch(API_BASE + params.toString());
   const data = await request.json();
-  return data;
+  return cleanup(data.results);
 }
 
 /**

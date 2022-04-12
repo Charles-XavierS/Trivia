@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 import Header from '../components/Header';
 import Question from '../components/Question';
+import '../styles/Game.css';
 
 class Game extends Component {
   constructor() {
@@ -23,15 +24,19 @@ class Game extends Component {
   render() {
     const { index } = this.state;
     const { questions } = this.props;
+    const questionNumber = `Question ${index + 1} of ${questions.length}`;
 
     const REDIRECT_INDEX = questions.length;
     if (index === REDIRECT_INDEX) return <Redirect push to="/feedback" />;
     return (
-      <>
+      <div className="game_container">
         <Header />
-        <h2>{ `Question ${index + 1} of ${questions.length}`}</h2>
-        <Question nextQuestion={ this.nextQuestion } question={ questions[index] } />
-      </>
+        <Question
+          questionNumber={ questionNumber }
+          nextQuestion={ this.nextQuestion }
+          question={ questions[index] }
+        />
+      </div>
     );
   }
 }

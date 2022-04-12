@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import '../styles/Header.css';
+import Logo from '../img/trivia.png';
 
 class Header extends Component {
   render() {
@@ -8,9 +10,17 @@ class Header extends Component {
 
     return (
       <header>
-        <img data-testid="header-profile-picture" src={ `https://www.gravatar.com/avatar/${gravatarEmail}` } alt="Avatar" />
-        <p data-testid="header-player-name">{name}</p>
-        <p data-testid="header-score">{score}</p>
+        <img src={ Logo } alt="" />
+        <div className="info">
+          <img data-testid="header-profile-picture" src={ `https://www.gravatar.com/avatar/${gravatarEmail}` } alt="Avatar" />
+          <strong data-testid="header-player-name">
+            {`Jogando como ${name}`}
+          </strong>
+          <span>|</span>
+          <p data-testid="header-score">
+            {`${score} pontos`}
+          </p>
+        </div>
       </header>
     );
   }

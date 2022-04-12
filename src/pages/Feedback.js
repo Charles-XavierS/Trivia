@@ -5,6 +5,7 @@ import { Redirect } from 'react-router-dom';
 import Header from '../components/Header';
 import addEntryAction from '../redux/actions/rankingActions';
 import { resetUserAction } from '../redux/actions/userActions';
+import '../styles/Feedback.css';
 
 class Feedback extends Component {
   componentDidMount() {
@@ -46,31 +47,37 @@ class Feedback extends Component {
     return (
       <main>
         <Header />
-        <span>
-          Pontuação:
-          {' '}
-          <span data-testid="feedback-total-score">{ score }</span>
-        </span>
-        <span>
-          Acertos:
-          {' '}
-          <span data-testid="feedback-total-question">{ assertions }</span>
-        </span>
-        <h4 data-testid="feedback-text">{this.handleScore()}</h4>
-        <button
-          type="button"
-          onClick={ this.playAgain }
-          data-testid="btn-play-again"
-        >
-          Play Again
-        </button>
-        <button
-          type="button"
-          data-testid="btn-ranking"
-          onClick={ () => history.push('/ranking') }
-        >
-          Ranking
-        </button>
+        <section>
+          <div className="feedback_container">
+            <span className="textCard">
+              Pontuação:
+              {' '}
+              <span data-testid="feedback-total-score">{ score }</span>
+            </span>
+            <span className="textCard">
+              Acertos:
+              {' '}
+              <span data-testid="feedback-total-question">{ assertions }</span>
+            </span>
+            <h4 data-testid="feedback-text">{this.handleScore()}</h4>
+            <button
+              className="btn-ranking"
+              type="button"
+              onClick={ this.playAgain }
+              data-testid="btn-play-again"
+            >
+              Play Again
+            </button>
+            <button
+              className="btn-ranking"
+              type="button"
+              data-testid="btn-ranking"
+              onClick={ () => history.push('/ranking') }
+            >
+              Ranking
+            </button>
+          </div>
+        </section>
       </main>
     );
   }
