@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { correctAnswerAction } from '../redux/actions/userActions';
+import '../styles/Game.css';
 
 const ONE_SECOND = 1000;
 
@@ -111,22 +112,41 @@ class Question extends Component {
   }
 
   render() {
-    const { question } = this.props;
+    const { question, questionNumber } = this.props;
     const { answers, wasClicked, timer } = this.state;
 
     return (
-      <div>
-        <p>
-          Timer:
-          {' '}
-          { timer }
-        </p>
+      <div className="question_container">
+        <div className="question_controls">
+          <div className="timer_container">
+            <span>{timer}</span>
+          </div>
+          <div>
+            <h2>{ questionNumber }</h2>
+            <p data-testid="question-category">{ question.category }</p>
+          </div>
+          { wasClicked ? (
+            <button
+              type="button"
+              className="nextBtn"
+              onClick={ this.handleNext }
+              data-testid="btn-next"
+            >
+              Next
+            </button>
+          ) : (
+            <span />
+          ) }
+        </div>
 
-        <p data-testid="question-category">{ question.category }</p>
-        <p data-testid="question-text">{ question.question }</p>
+        <div className="question_content">
+
+          <p data-testid="question-text">{ question.question }</p>
+        </div>
 
         <div
           data-testid="answer-options"
+          id="answer-options"
           className={
             wasClicked
               ? 'answer_container'
@@ -136,7 +156,7 @@ class Question extends Component {
           { answers.map((answer) => (
             <button
               type="button"
-              className={ answer.correct ? 'correct' : 'wrong' }
+              className={ answer.correct ? 'answer correct' : 'answer wrong' }
               key={ answer.value }
               disabled={ wasClicked }
               data-testid={ answer.correct
@@ -148,16 +168,6 @@ class Question extends Component {
             </button>
           ))}
         </div>
-
-        { wasClicked && (
-          <button
-            type="button"
-            onClick={ this.handleNext }
-            data-testid="btn-next"
-          >
-            Next
-          </button>
-        ) }
       </div>
     );
   }

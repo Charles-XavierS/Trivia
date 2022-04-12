@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Link, Redirect } from 'react-router-dom';
 import { loginAction } from '../redux/actions/userActions';
+import logo from '../img/trivia.png';
+import '../styles/Login.css';
 
 class Login extends Component {
   constructor() {
@@ -45,38 +47,45 @@ class Login extends Component {
 
     if (questions.length) return <Redirect push to="/game" />;
     return (
-      <form>
-        <input
-          data-testid="input-player-name"
-          name="name"
-          value={ name }
-          onChange={ handleInput }
-          placeholder="Nome do Jogador"
-        />
-        <input
-          data-testid="input-gravatar-email"
-          name="email"
-          value={ email }
-          onChange={ handleInput }
-          placeholder="Email"
-        />
-        <button
-          data-testid="btn-play"
-          type="button"
-          onClick={ handleLogin }
-          disabled={ !isFormValid() }
-        >
-          Play
-        </button>
-        <Link to="/settings">
+      <div className="loginPage container">
+        <div className="login-area">
+          <img src={ logo } className="logo-tribia" alt="" />
+          <input
+            data-testid="input-player-name"
+            name="name"
+            className="email"
+            value={ name }
+            onChange={ handleInput }
+            placeholder="Nome do Jogador"
+          />
+          <input
+            data-testid="input-gravatar-email"
+            name="email"
+            className="email"
+            value={ email }
+            onChange={ handleInput }
+            placeholder="Email"
+          />
           <button
-            data-testid="btn-settings"
+            data-testid="btn-play"
             type="button"
+            className="button-play"
+            onClick={ handleLogin }
+            disabled={ !isFormValid() }
           >
-            Settings
+            Play
           </button>
-        </Link>
-      </form>
+          <Link to="/settings">
+            <button
+              data-testid="btn-settings"
+              className="button-config"
+              type="button"
+            >
+              Settings
+            </button>
+          </Link>
+        </div>
+      </div>
     );
   }
 }

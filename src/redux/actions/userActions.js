@@ -3,10 +3,10 @@ import { getGravatar, getQuestions, getToken } from '../../api/request';
 const loginAction = (email, name) => async (dispatch, getState) => {
   const { settings } = getState();
   const { token } = await getToken();
-  const { results } = await getQuestions({ token, ...settings });
+  const questions = await getQuestions({ token, ...settings });
   const gravatarEmail = getGravatar(email);
 
-  dispatch({ type: 'LOGIN', payload: { name, gravatarEmail, questions: results } });
+  dispatch({ type: 'LOGIN', payload: { name, gravatarEmail, questions } });
   dispatch({ type: 'SET_TOKEN', token });
 };
 

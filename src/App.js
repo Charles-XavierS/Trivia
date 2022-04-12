@@ -5,6 +5,7 @@ import Feedback from './pages/Feedback';
 import Settings from './pages/Settings';
 import Game from './pages/Game';
 import Ranking from './pages/Ranking';
+import './styles/Container.css';
 
 export default class App extends React.Component {
   render() {
